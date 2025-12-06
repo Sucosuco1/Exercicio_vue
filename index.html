@@ -8,75 +8,75 @@
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     
     <style>
-        .card-produto { transition: transform 0.2s; }
-        .card-produto:hover { transform: scale(1.05); }
+        .card-img-top { height: 200px; object-fit: contain; padding: 20px; }
+        .carrinho-area { background-color: #f8f9fa; border-left: 1px solid #dee2e6; min-height: 100vh; }
     </style>
 </head>
-<body class="bg-light">
+<body>
 
-    <div id="app" class="container py-5">
-        
-        <h1 class="text-center mb-5">Loja mega resenha</h1>
-
-        <div class="row mb-5">
-            <h3>Produtos resenha</h3>
+    <div id="app" class="container-fluid">
+        <div class="row">
             
-            <div class="col-md-4 mb-3" v-for="produto in produtos" :key="produto.id">
-                <div class="card card-produto shadow-sm h-100">
-                    <div class="card-body text-center">
-                        <img v-bind:src="'https://placehold.co/150x150?text=' + produto.nome" class="img-fluid rounded-circle mb-3">
-                        
-                        <h5 class="card-title">{{ produto.nome }}</h5>
-                        <p class="card-text text-success fw-bold">R$ {{ produto.preco.toFixed(2) }}</p>
-                        
-                        <button v-on:click="adicionarAoCarrinho(produto)" class="btn btn-primary w-100">
-                            Adicionar ao carrinho ➕
-                        </button>
+            <div class="col-md-8 py-5 px-4">
+                <h1 class="mb-4 text-primary">Produtos Disponíveis</h1>
+                
+                <div class="row">
+                    <div class="col-md-4 mb-4" v-for="produto in produtos" :key="produto.id">
+                        <div class="card h-100 shadow-sm">
+                            <img v-bind:src="produto.imagem" class="card-img-top" :alt="produto.nome">
+                            
+                            <div class="card-body text-center">
+                                <h5 class="card-title">{{ produto.nome }}</h5>
+                                <p class="card-text fw-bold text-success">R$ {{ produto.preco.toFixed(2) }}</p>
+                                
+                                <button v-on:click="adicionarAoCarrinho(produto)" class="btn btn-primary w-100">
+                                    Adicionar +
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <hr>
+            <div class="col-md-4 carrinho-area py-5 px-4">
+                <h2 class="mb-4">Seu Carrinho</h2>
 
-        <div class="row mt-4">
-            <div class="col-md-6">
-                <h3>Meu Carrinho</h3>
-                
-                <div v-if="carrinho.length === 0" class="alert alert-warning">
-                    Seu carrinho está vazio.
+                <div v-if="carrinho.length === 0" class="alert alert-warning text-center">
+                    Seu carrinho está vazio.<br> Adicione itens para comprar.
                 </div>
 
-                <ul class="list-group" v-else>
+                <ul class="list-group mb-4" v-else>
                     <li class="list-group-item d-flex justify-content-between align-items-center" v-for="(item, index) in carrinho" :key="index">
                         {{ item.nome }}
-                        <span class="badge bg-primary rounded-pill">R$ {{ item.preco.toFixed(2) }}</span>
+                        <span class="badge bg-secondary">R$ {{ item.preco.toFixed(2) }}</span>
                     </li>
                     <li class="list-group-item active d-flex justify-content-between">
-                        <strong>TOTAL:</strong>
+                        <strong>Total:</strong>
                         <strong>R$ {{ totalCarrinho.toFixed(2) }}</strong>
                     </li>
                 </ul>
-            </div>
 
-            <div class="col-md-6">
-                <div v-show="carrinho.length > 0" class="card border-success mt-3 mt-md-0">
-                    <div class="card-header bg-success text-white">
-                        Pagamento
-                    </div>
-                    <div class="card-body">
-                        <p>Escolha a forma de pagamento:</p>
-                        <select class="form-select mb-3">
-                            <option>Pix</option>
-                            <option>Cartão de Crédito</option>
-                            <option>Boleto</option>
-                        </select>
-                        <button class="btn btn-success w-100">Finalizar Compra</button>
+                <div v-show="carrinho.length > 0">
+                    <div class="card border-success">
+                        <div class="card-header bg-success text-white">
+                            Pagamento
+                        </div>
+                        <div class="card-body">
+                            <label class="form-label">Forma de Pagamento:</label>
+                            <select class="form-select mb-3">
+                                <option>Pix</option>
+                                <option>Cartão de Crédito</option>
+                                <option>Boleto Bancário</option>
+                            </select>
+                            <button class="btn btn-success w-100" @click="finalizarCompra">
+                                Finalizar Pedido.
+                            </button>
+                        </div>
                     </div>
                 </div>
+
             </div>
         </div>
-
     </div>
 
     <script>
@@ -86,10 +86,12 @@
             data() {
                 return {
                     produtos: [
-                        { id: 1, nome: 'Chá da resenha', preco: 150.00 },
-                        { id: 2, nome: '1kg de peixe azul', preco: 25.50 },
-                        { id: 3, nome: '1Kg de pé de galinha', preco: 45.00 },
-                        { id: 4, nome: 'Petiscos para gato', preco: 12.99 }
+                        { id: 1, nome: 'Notebook Gamer', preco: 4500.00, imagem: 'https://placehold.co/200x200?text=Notebook' },
+                        { id: 2, nome: 'Mouse Sem Fio', preco: 120.50, imagem: 'https://placehold.co/200x200?text=Mouse' },
+                        { id: 3, nome: 'Teclado Mecânico', preco: 350.00, imagem: 'https://placehold.co/200x200?text=Teclado' },
+                        { id: 4, nome: 'Monitor 24"', preco: 899.90, imagem: 'https://placehold.co/200x200?text=Monitor' },
+                        { id: 5, nome: 'Headset RGB', preco: 230.00, imagem: 'https://placehold.co/200x200?text=Headset' },
+                        { id: 6, nome: 'Cadeira Gamer', preco: 1200.00, imagem: 'https://placehold.co/200x200?text=Cadeira' }
                     ],
                     carrinho: []
                 }
@@ -102,6 +104,10 @@
             methods: {
                 adicionarAoCarrinho(produto) {
                     this.carrinho.push(produto);
+                },
+                finalizarCompra() {
+                    alert('Compra finalizada com sucesso.');
+                    this.carrinho = [];
                 }
             }
         }).mount('#app')
